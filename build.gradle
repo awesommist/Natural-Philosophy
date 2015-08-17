@@ -45,35 +45,30 @@ dependencies {
 //================================================
 // Jar data
 
-ext.configFile = file('gradle.properties')
-ext.config = parseConfig(configFile)
-
-version = "${config.version}-${config.build_number}"
+version = mod_version + "-" + build_num
 group = "naturalphilosophy"
-archivesBaseName = config.mod_name
+archivesBaseName = mod_name
 
 minecraft {
-    version = "${config.mc_version}-${config.forge_version}"
+    version = mc_ver + "-" + forge_ver
     runDir = "out/run"
 
-    replace '$VERSION$', "${config.version}-${config.build_number}"
+    replace '$VERSION$', mod_version + "-" + build_num
     replace '$LIB-VERSION$', project(':DynamicLib').lib_version
     replace '$NEXT-LIB-VERSION$', project(':DynamicLib').next_lib_version
     replaceIn 'NaturalPhilosophy.java'
 }
 
 processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "version", version
 
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        include '**/*.info'
+        expand 'version':version,'MCVersion':mc_ver
     }
 
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude '**/*.info'
     }
 }
 
@@ -93,13 +88,16 @@ task devJar(type: Jar, dependsOn: 'classes') {
 // Misc stuff
 
 task incrementBuildNumber(dependsOn: 'reobf') << {
-    config.build_number = (config.build_number.toString().toInteger()) + 1
+    def configFile = file('gradle.properties')
+    def config = parseConfig(configFile)
+
+    config.build_num = (config.build_num.toString().toInteger()) + 1
     configFile.withWriter {
         config.toProperties().store(it, "")
     }
 
-    file('web/versions.ini').append("\n${version}=${minecraft.version}")
-    file("version/${minecraft.version}.txt").write("${version}")
+    file('web/versions.ini').append("\n${version}=${mc_ver}")
+    file("version/${mc_ver}.txt").write("${version}")
 }
 
 def parseConfig(File config) {
@@ -112,6 +110,12 @@ def parseConfig(File config) {
 
 artifacts {
     archives devJar
+}
+
+sourceSets {
+    main {
+        output.resourcesDir = output.classesDir
+    }
 }
 
 tasks.build.dependsOn tasks.incrementBuildNumber

@@ -1,17 +1,15 @@
 [
 {
-  "modid": "naturalphilosophy",
-  "name": "Natural Philosophy",
+  "modid" : "naturalphilosophy",
+  "name" : "Natural Philosophy",
+  "version" : "${version}",
+  "url" : "",
+  "credits" : "",
+  "authors": [ "awesommist" ],
   "description": "Science!",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "logoFile": "",
-  "url": "https://github.com/awesommist/Natural-Philosophy",
-  "updateUrl": "",
-  "authorList": ["awesommist"],
-  "credits": "awesommist",
-  "parent": "",
-  "screenshots": [],
-  "dependencies": []
+  "logoFile" : "",
+  "updateUrl" : "",
+  "parent" : "",
+  "screenshots": []
 }
 ]
