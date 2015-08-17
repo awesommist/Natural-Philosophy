@@ -13,7 +13,7 @@ public class NaturalPhilosophy {
     public static final String MODID = "naturalphilosophy";
     public static final String NAME = "Natural Philosophy";
     public static final String VERSION = "$VERSION$";
-    public static final String DEPENDENCIES = "required-after:dynamiclib";
+    public static final String DEPENDENCIES = "required-after:dynamiclib@[$LIB-VERSION$,$NEXT-LIB-VERSION$)";
 
     @Instance(MODID)
     public static NaturalPhilosophy instance;
