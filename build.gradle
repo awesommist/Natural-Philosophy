@@ -7,12 +7,12 @@ buildscript {
         mavenCentral()
         // Minecraft Forge
         maven {
-            name = "Forge"
-            url = "http://files.minecraftforge.net/maven"
+            name = 'Forge'
+            url = 'http://files.minecraftforge.net/maven'
         }
         // Sonatype (for SpecialSource in 1.7+)
         maven {
-            name = "sonatype"
+            name = "Sonatype Nexus"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
@@ -39,13 +39,14 @@ apply plugin: 'forge'
 // Dependencies
 
 dependencies {
-    compile project(:DynamicLib)
+//    compile project(:DynamicLib)
 }
 
 //================================================
 // Jar data
 
-ext.config = parseConfig(file('build.properties'))
+ext.configFile = file('build.properties')
+ext.config = parseConfig(configFile)
 
 version = "${config.version}-${config.build_number}"
 group = "naturalphilosophy"
@@ -53,10 +54,10 @@ archivesBaseName = config.mod_name
 
 minecraft {
     version = "${config.mc_version}-${config.forge_version}"
-    runDir = "eclipse/assets"
+    runDir = "out/run"
 
     replace '$VERSION$', "${config.version}-${config.build_number}"
-    replace '$LIB_VERSION', project(:DynamicLib).mod_version
+//    replace '$LIB_VERSION', project(:DynamicLib).mod_version
     replaceIn 'NaturalPhilosophy.java'
 }
 
@@ -97,7 +98,7 @@ task incrementBuildNumber(dependsOn: 'reobf') << {
     }
 
     file('web/versions.ini').append("\n${version}=${minecraft.version}")
-    file("${config.dir_repo}/version/${minecraft.version}.txt").write("${version}")
+    file("version/${minecraft.version}.txt").write("${version}")
 }
 
 def parseConfig(File config) {
@@ -112,5 +113,5 @@ artifacts {
     archives devJar
 }
 
-build.dependsOn tasks.incrementBuildNumber
+tasks.build.dependsOn tasks.incrementBuildNumber
 defaultTasks 'clean', 'build'
